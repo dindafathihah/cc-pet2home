@@ -17,3 +17,19 @@ exports.showUserDataHistory = function(req, res){
             rows})
     })
 };
+
+exports.profileUserId = function (req, res) {
+    let id = req.params.id
+
+    conne.query('select * from user where id_user = ?', [id], function (error, rows) {
+        
+        res.send(
+            {status:200, 
+            error: false, 
+            profile: ({
+                data:rows
+            })
+            }
+        )
+    });
+};

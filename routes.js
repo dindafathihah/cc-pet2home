@@ -7,5 +7,7 @@ module.exports=function(app){
         .get(myjson.index);
     app.route('/showData')
         .get(myjson.showUserDataHistory);
+    app.route('/profile/:id')
+        .get(myjson.profileUserId);
 
 }
