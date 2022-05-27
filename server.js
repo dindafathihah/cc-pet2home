@@ -7,7 +7,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
-
+const port=process.env.PORT
+const host=process.env.DB_HOST
 
 app.listen(port, () => {
     console.log(`Server started on ${port} and running at ${host}`);
