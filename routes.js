@@ -9,5 +9,8 @@ module.exports=function(app){
         .get(myjson.showUserDataHistory);
     app.route('/profile/:id')
         .get(myjson.profileUserId);
+    app.route('/profile/delete/:id')
+        .delete(myjson.deleteUser);
+    
 
 }

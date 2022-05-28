@@ -33,3 +33,28 @@ exports.profileUserId = function (req, res) {
         )
     });
 };
+
+//delete with params(OK)
+exports.deleteUser = function (req, res) {
+    let id = req.params.id
+
+    conne.query('delete from user where id_user = ?', [id], function (error, rows) {
+        if (!error) {
+            
+            res.send(
+                {status:200, 
+                error: true, 
+                message: 'Success deletes id = '+id
+                }
+            )
+        } else if (error) {
+            res.send(
+                {status:500, 
+                error: false, 
+                message: 'Fail deletes id'
+                }
+            )
+        }
+    });
+};
+
