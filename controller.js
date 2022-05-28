@@ -58,3 +58,36 @@ exports.deleteUser = function (req, res) {
     });
 };
 
+//update with params(OK)
+exports.editProfile= function (req, res){
+    //let id= req.body.id;
+    let id = req.params.id
+    let username=req.body.username;
+   // let password=md5(req.body.password);
+    let email=req.body.email;
+    //let full_name=req.body.full_name;
+    let birth_date=req.body.birth_date;
+    let birth_place=req.body.birth_place;
+    let phone_number=req.body.phone_number;
+
+    conne.query('update user set username = ?, email = ?, birth_date = ?, birth_place = ?,  phone_number=?  where id_user = ?',
+    [username, email, birth_date, birth_place, phone_number,id ], 
+        function (error, rows, fields){
+            if (error){
+                res.send(
+                    {status:500, 
+                    error: true, 
+                    message: 'Fail updates id'
+                    }
+                )
+            } else if (!error) {                
+                res.send(
+                    {status:200, 
+                    error: true, 
+                    message: 'Success updates id = '+id
+                    }
+                )
+            }
+        }
+    )
+}
