@@ -13,6 +13,9 @@ module.exports=function(app){
         .delete(myjson.deleteUser);
     app.route('/profile/updateData/:id')
         .put(myjson.editProfile)
+    app.route('/register')
+        .post(myjson.addUser)
+
     
 
 }
