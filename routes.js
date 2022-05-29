@@ -15,6 +15,8 @@ module.exports=function(app){
         .put(myjson.editProfile)
     app.route('/register')
         .post(myjson.addUser)
+    app.route('/login')
+        .post(myjson.loginUser)
 
     
 

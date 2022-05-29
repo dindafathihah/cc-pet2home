@@ -94,6 +94,7 @@ exports.editProfile= function (req, res){
     )
 }
 
+
 exports.addUser = function(req, res){
     var email = req.body.email
     var id  = nanoid(16)
@@ -131,3 +132,27 @@ exports.addUser = function(req, res){
     })
 }
 
+
+exports.loginUser =  function (req,res){
+    var email = req.body.email
+    var password = md5(req.body.password)
+    let values = [email,password]
+    conne.query('select * from user where email = ? and password = ?', values,function (error, rows) {
+        if (rows.length == 1){
+            res.send({
+                status:200,
+                error: true,
+                message: 'Login success',
+                user:({
+                    id: rows[0].id_user,
+                    username: rows[0].username
+                })
+            })
+        }else if(rows.length !== 1){
+            res.status(401).send({
+                error: false,
+                message: 'Login failed. Wrong email or password!',
+            })
+        }
+    })
+}
