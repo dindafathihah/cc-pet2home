@@ -46,7 +46,7 @@ exports.deleteUser = function (req, res) {
                 }
             )
         } else if (error) {
-            res.status(200).json({ 
+            res.status(400).json({ 
                 error: false, 
                 message: 'Fail deletes id'
                 }
@@ -57,18 +57,19 @@ exports.deleteUser = function (req, res) {
 
 //update with params(OK)
 exports.editProfile= function (req, res){
-    //let id= req.body.id;
     let id = req.params.id
     let username=req.body.username;
-   // let password=md5(req.body.password);
+    let password=md5(req.body.password);
     let email=req.body.email;
-    //let full_name=req.body.full_name;
     let birth_date=req.body.birth_date;
     let birth_place=req.body.birth_place;
     let phone_number=req.body.phone_number;
+    let updatedAt = new Date()
+    let userinstagram = req.body.userinstagram
 
-    conne.query('update user set username = ?, email = ?, birth_date = ?, birth_place = ?,  phone_number=?  where id_user = ?',
-    [username, email, birth_date, birth_place, phone_number,id ], 
+
+    conne.query('update user set username = ?, email = ?, birth_date = ?, birth_place = ?,  phone_number=?, updatedat=?, userinstagram=? where id_user = ?',
+    [username, email, password, birth_date, birth_place, updatedAt,  phone_number,userinstagram,id ], 
         function (error, rows, fields){
             if (error){
                 res.status(500).json({
@@ -98,6 +99,8 @@ exports.addUser = function(req, res){
     var birth_place=req.body.birth_place 
     var role="member"
     var status="active"
+    var createdAt = new Date();
+    var updatedAt = createdAt;
     conne.query('select email from user where email = ?',email, function (error, rows) {
         if (rows.length == 1){
             res.status(400).json({
@@ -105,8 +108,8 @@ exports.addUser = function(req, res){
                 message: 'Email has been taken. Try with another email'
             })
         } else if(rows.length == 0){
-            let values =['user_'+id, email, username, password, phone_number, birth_date, birth_place, role, status] 
-            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place, role, status) values (?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields){
+            let values =['user_'+id, email, username, password, phone_number, birth_date, birth_place, role, status,createdAt, updatedAt] 
+            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place, role, status,createdAt, updatedAt) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields){
                 if(error){
                     res.status(500).json({
                         success: true,
