@@ -13,10 +13,10 @@ exports.index= function(req, res){
 
 exports.showUserDataHistory = function(req, res){
     conne.query('select * from user', function(error, rows, fields){
-        res.send(
-            {status:200, 
-            error: false, 
-            rows})
+        res.status(200).json({
+            success: false,
+            rows
+        })
     })
 };
 
@@ -24,10 +24,8 @@ exports.profileUserId = function (req, res) {
     let id = req.params.id
 
     conne.query('select * from user where id_user = ?', [id], function (error, rows) {
-        
-        res.send(
-            {status:200, 
-            error: false, 
+        res.status(200).json({
+            success: false,
             profile: ({
                 data:rows
             })
@@ -42,16 +40,13 @@ exports.deleteUser = function (req, res) {
 
     conne.query('delete from user where id_user = ?', [id], function (error, rows) {
         if (!error) {
-            
-            res.send(
-                {status:200, 
+            res.status(200).json({
                 error: true, 
                 message: 'Success deletes id = '+id
                 }
             )
         } else if (error) {
-            res.send(
-                {status:500, 
+            res.status(200).json({ 
                 error: false, 
                 message: 'Fail deletes id'
                 }
@@ -76,16 +71,14 @@ exports.editProfile= function (req, res){
     [username, email, birth_date, birth_place, phone_number,id ], 
         function (error, rows, fields){
             if (error){
-                res.send(
-                    {status:500, 
-                    error: true, 
+                res.status(500).json({
+                    success: true,
                     message: 'Fail updates id'
                     }
                 )
-            } else if (!error) {                
-                res.send(
-                    {status:200, 
-                    error: true, 
+            } else if (!error) {     
+                res.status(200).json({
+                    success: false,
                     message: 'Success updates id = '+id
                     }
                 )
@@ -103,27 +96,27 @@ exports.addUser = function(req, res){
     var phone_number = req.body.phone_number
     var birth_date=req.body.birth_date
     var birth_place=req.body.birth_place 
+    var role="member"
+    var status="active"
     conne.query('select email from user where email = ?',email, function (error, rows) {
         if (rows.length == 1){
-            res.send({
-                status:400,
-                error: true,
+            res.status(400).json({
+                success: true,
                 message: 'Email has been taken. Try with another email'
             })
         } else if(rows.length == 0){
-            let values =[id, email, username, password, phone_number, birth_date, birth_place] 
-            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place) values (?,?,?,?,?,?,?)', values, function(error, rows, fields){
+            let values =['user_'+id, email, username, password, phone_number, birth_date, birth_place, role, status] 
+            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place, role, status) values (?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields){
                 if(error){
-                    res.send(
-                        {status:500, 
-                        error: true, 
+                    res.status(500).json({
+                        success: true,
                         error
                         }
                     )
                 }else{
-                    res.send({
-                        status:200,
-                        error: false,
+                    res.status(200).json({
+                        success: false,
+                        rows,
                         message: 'Email registered successfully'
                     })
                 }
@@ -132,16 +125,15 @@ exports.addUser = function(req, res){
     })
 }
 
-
 exports.loginUser =  function (req,res){
     var email = req.body.email
     var password = md5(req.body.password)
     let values = [email,password]
     conne.query('select * from user where email = ? and password = ?', values,function (error, rows) {
         if (rows.length == 1){
-            res.send({
-                status:200,
-                error: true,
+            res.status(200).json({
+                success: true,
+                rows,
                 message: 'Login success',
                 user:({
                     id: rows[0].id_user,
@@ -156,3 +148,4 @@ exports.loginUser =  function (req,res){
         }
     })
 }
+

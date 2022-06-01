@@ -5,6 +5,8 @@ module.exports=function(app){
     
     app.route('/')
         .get(myjson.index);
+
+    //Khusus user
     app.route('/showData')
         .get(myjson.showUserDataHistory);
     app.route('/profile/:id')
@@ -18,6 +20,7 @@ module.exports=function(app){
     app.route('/login')
         .post(myjson.loginUser)
 
+    //Isi App
     
 
 }
