@@ -187,12 +187,12 @@ exports.postPet = function (req,res){
     var age = req.body.age
     var location = req.body.location
     var description = req.body.description
-    //var kontak = req.body.kontak
+    var whatsapp = req.body.whatsapp
     var insta = req.body.insta
     var createdAt = new Date()
     var updatedAt = createdAt
-    let values =['posts-'+id, id_user,tittle,breed,age,location,description,insta,createdAt, updatedAt] 
-    conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, description,  insta, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields){
+    let values =['posts-'+id, id_user,tittle,breed,age,location,description,insta,whatsapp,createdAt, updatedAt] 
+    conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, description,  insta, whatsapp, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields){
         if(error){
             res.status(500).send(
                 {status: 500,
