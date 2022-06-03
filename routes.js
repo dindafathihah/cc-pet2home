@@ -18,6 +18,8 @@ module.exports=function(app){
         .post(myjson.addUser)
     app.route('/login')
         .post(myjson.loginUser)
+    app.route('/getAlluser')
+        .get(myjson.getallUser)
     
     //Khusus pet
     app.route('/postPet')
@@ -38,4 +40,8 @@ module.exports=function(app){
         .get(myjson.getpostbytittle);
     app.route('/search/name/:name')
         .get(myjson.getuserbyname);
+    app.route('/search')
+        .get(myjson.search);
+    app.route('/searchUser')
+        .get(myjson.searchUser);
 }

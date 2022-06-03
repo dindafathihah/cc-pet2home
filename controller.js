@@ -22,9 +22,10 @@ exports.loginUser =  function (req,res){
             res.status(200).json({
                 status:200,
                 error: true,
-                message: 'Login success',
-                user:({
-                    id: rows[0].id_user,
+                //message: 'Login success',
+                result:({
+                    userId: rows[0].id_user,
+                    email: rows[0].email,
                     username: rows[0].username
                 })
             })
@@ -46,7 +47,8 @@ exports.profileUserId = function (req, res) {
         res.status(200).json({
             status:200,
             success: true,
-            profile: ({
+            message: 'User found',
+            result: ({
                 data:rows
             })
             }
@@ -86,14 +88,34 @@ exports.addUser = function(req, res){
                         }   
                     )
                 }else{
-                    res.status(200).json({
-                        status:200,
+                    res.status(201).json({
+                        status:201,
                         success: true,
-                        message: 'Email registered successfully'
+                        message: 'Email registered successfully',
+                        result: ({
+                            userId: 'user_'+id,
+                            email: email,
+                            username: username
+                        })
                     })
+                    
                 }
             })
         }
+    })
+}
+
+
+exports.getallUser=function(req, res){
+    conne.query(`select * from user `, function (error, rows){
+        res.status(200).json({
+            status:200,
+            success: true,
+            result: ({
+                data:rows
+            })
+            }
+        )
     })
 }
 
@@ -106,14 +128,15 @@ exports.deleteUser = function (req, res) {
             res.status(200).json({
                 status:200,
                 success: true, 
-                message: 'Success deletes id = '+id
+                message: 'Success deletes id = '+id,
+                
                 }
             )
         } else if (error) {
-            res.status(400).json({ 
-                status:400,
+            res.status(404).json({ 
+                status:404,
                 success: false, 
-                message: 'Fail deletes id'
+                message: 'Fail deletes id='+id
                 }
             )
         }
@@ -195,7 +218,7 @@ exports.getpet = function(req,res){
         res.status(200).send(
             {status:200,
             succes: true, 
-            profile: ({
+            result: ({
                 data:rows
             })
             }
@@ -210,7 +233,7 @@ exports.getPetwithIduser =function(req,res){
         res.status(200).send(
             {status:200,
             success: true, 
-            post: ({
+            result: ({
                 data:rows
             })
             }
@@ -225,7 +248,7 @@ exports.getPetwithIdpost =function(req,res){
         res.status(200).send(
             {status:200,
             succes: true, 
-            post: ({
+            result: ({
                 data:rows
             })
             }
@@ -243,7 +266,8 @@ exports.deletePost = function (req, res) {
             res.status(200).send(
                 { status:200,
                 success: true, 
-                message: 'Success deletes post with id= '+id
+                message: 'Success deletes post with id= '+id,
+            
                 }
             )
         } else if (error) {
@@ -298,7 +322,7 @@ exports.getpostbytittle = function (req,res){
         res.status(200).send(
             {status:200,
             succes: true, 
-            post: ({
+            result: ({
                 data:rows
             })
             }
@@ -312,10 +336,65 @@ exports.getuserbyname = function (req, res) {
         res.status(200).json({
             status:200,
             success: true,
-            profile: ({
+            result: ({
                 data:rows
             })
             }
         )
     });
 };
+
+exports.search=function(req, res){
+    let title=req.query.title
+    let breed=req.query.breed
+
+    if (breed == null || breed == undefined){
+        conne.query(`select * from posts where tittle like '%${title}%'`, function (error, rows){
+            res.status(200).json({
+                status:200,
+                success: true,
+                result: ({
+                    data:rows
+                })
+                }
+            )
+        })
+    }else if (title == null || title == undefined){
+        conne.query(`select * from posts where breed like '%${breed}%'`, function (error, rows){
+            res.status(200).json({
+                status:200,
+                success: true,
+                result: ({
+                    data:rows
+                })
+                }
+            )
+        })
+    }else if (title !== null && breed !== undefined){
+        conne.query(`select * from posts where tittle like '%${title}%' and breed like '%${breed}%'`, function (error, rows){
+            res.status(200).json({
+                status:200,
+                success: true,
+                result: ({
+                    data:rows
+                })
+                }
+            )
+        })
+    }
+}
+
+exports.searchUser = function(req, res){
+    let name= req.query.name
+
+    conne.query(`select * from user where username like '%${name}%'`, function (error, rows){
+        res.status(200).json({
+            status:200,
+            success: true,
+            result: ({
+                data:rows
+            })
+            }
+        )
+    })
+}
