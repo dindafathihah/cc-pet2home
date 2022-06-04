@@ -1,47 +1,48 @@
 'use strict'
 
-module.exports=function(app){
-    var myjson=require('./controller');
-    
+module.exports = function(app) {
+    var myjson = require('./controller');
+    var auth = require("./VerifyToken");
+
     //test api berjalan/tidak
     app.route('/')
         .get(myjson.index);
 
     //Khusus user
     app.route('/profile/:id')
-        .get(myjson.profileUserId);
+        .get(auth, myjson.profileUserId);
     app.route('/profile/delete/:id')
-        .delete(myjson.deleteUser);
+        .delete(auth, myjson.deleteUser);
     app.route('/profile/update/:id')
-        .put(myjson.editProfile)
+        .put(auth, myjson.editProfile)
     app.route('/register')
         .post(myjson.addUser)
     app.route('/login')
         .post(myjson.loginUser)
     app.route('/getAlluser')
-        .get(myjson.getallUser)
-    
+        .get(auth, myjson.getallUser)
+
     //Khusus pet
     app.route('/postPet')
-        .post(myjson.postPet)
+        .post(auth, myjson.postPet)
     app.route('/profile/pet/:id')
-        .get(myjson.getPetwithIduser);
+        .get(auth, myjson.getPetwithIduser);
     app.route('/getallpet')
-        .get(myjson.getpet)
+        .get(auth, myjson.getpet)
     app.route('/getPetWith/:id')
-        .get(myjson.getPetwithIdpost)
+        .get(auth, myjson.getPetwithIdpost)
     app.route('/post/update/:id')
-        .put(myjson.editPost)
+        .put(auth, myjson.editPost)
     app.route('/post/delete/:id')
-        .delete(myjson.deletePost)
+        .delete(auth, myjson.deletePost)
 
     //additional
     app.route('/search/title/:title')
-        .get(myjson.getpostbytittle);
+        .get(auth, myjson.getpostbytittle);
     app.route('/search/name/:name')
-        .get(myjson.getuserbyname);
+        .get(auth, myjson.getuserbyname);
     app.route('/search')
-        .get(myjson.search);
+        .get(auth, myjson.search);
     app.route('/searchUser')
-        .get(myjson.searchUser);
+        .get(auth, myjson.searchUser);
 }
