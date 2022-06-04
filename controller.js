@@ -1,6 +1,7 @@
 'use strict'
 var conne = require('./connection')
 var md5 = require('md5')
+const jwt = require("jsonwebtoken");
 const { nanoid } = require('nanoid')
 
 exports.index = function(req, res) {
@@ -19,11 +20,16 @@ exports.loginUser = function(req, res) {
     let values = [email, password]
     conne.query('select * from user where email = ? and password = ?', values, function(error, rows) {
         if (rows.length == 1) {
+            //set token
+            var token = jwt.sign({ id_user: rows[0].id_user, email: rows[0].email },
+                process.env.TOKEN_KEY
+            );
             res.status(200).json({
                 status: 200,
                 error: true,
-                //message: 'Login success',
+                message: 'Login success',
                 result: ({
+                    token: token,
                     userId: rows[0].id_user,
                     email: rows[0].email,
                     username: rows[0].username
