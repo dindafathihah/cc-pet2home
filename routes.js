@@ -3,6 +3,7 @@
 module.exports = function(app) {
     var myjson = require('./controller');
     var auth = require("./VerifyToken");
+    var upload = require('./multer-config');
 
     //test api berjalan/tidak
     app.route('/')
@@ -14,7 +15,7 @@ module.exports = function(app) {
     app.route('/profile/delete/:id')
         .delete(auth, myjson.deleteUser);
     app.route('/profile/update/:id')
-        .put(auth, myjson.editProfile)
+        .put(auth, upload.imageUpload.single('avatar'), myjson.editProfile)
     app.route('/register')
         .post(myjson.addUser)
     app.route('/login')

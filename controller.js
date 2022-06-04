@@ -2,6 +2,8 @@
 var conne = require('./connection')
 var md5 = require('md5')
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
+const path = require('path');
 const { nanoid } = require('nanoid')
 
 exports.index = function(req, res) {
@@ -146,16 +148,37 @@ exports.deleteUser = function(req, res) {
 
 //sukses
 exports.editProfile = function(req, res) {
-    let id = req.params.id
-    let username = req.body.username;
-    let password = md5(req.body.password);
-    let email = req.body.email;
-    let birth_date = req.body.birth_date;
-    let birth_place = req.body.birth_place;
-    let phone_number = req.body.phone_number;
-    let updated_at = new Date()
+    let id = req.params.id;
+    var username = req.body.username;
+    var password = md5(req.body.password);
+    var email = req.body.email;
+    var birth_date = req.body.birth_date;
+    var birth_place = req.body.birth_place;
+    var phone_number = req.body.phone_number;
+    var updated_at = new Date()
+    var avatar = null
 
-    conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, updated_at=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, updated_at, id],
+    //check image file
+    if (req.file) {
+
+        // check file data in storage, if file exists delete it
+        conne.query('select * from user where id_user = ?', id, function(error, rows) {
+            if (rows.length == 1) {
+                if (rows[0].avatar != null) {
+                    fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('File has been Deleted');
+                        }
+                    });
+                }
+            }
+        });
+        avatar = req.file.fieldname + '_' + req.file.originalname;
+    }
+
+    conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, id],
         function(error, rows, fields) {
             if (error) {
                 res.status(500).json({
