@@ -21,8 +21,8 @@ exports.loginUser =  function (req,res){
         if (rows.length == 1){
             res.status(200).json({
                 status:200,
-                error: true,
-                //message: 'Login success',
+                success: true,
+                message: 'User found',
                 result:({
                     userId: rows[0].id_user,
                     email: rows[0].email,
@@ -32,7 +32,7 @@ exports.loginUser =  function (req,res){
         }else if(rows.length !== 1){
             res.status(401).json({
                 status:401,
-                error: false,
+                success: false,
                 message: 'Login failed. Wrong email or password!',
             })
         }
@@ -187,6 +187,7 @@ exports.postPet = function (req,res){
     var age = req.body.age
     var location = req.body.location
     var description = req.body.description
+
     var whatsapp = req.body.whatsapp
     var insta = req.body.insta
     var createdAt = new Date()
