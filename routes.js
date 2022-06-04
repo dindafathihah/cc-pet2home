@@ -1,8 +1,8 @@
 'use strict'
 
-module.exports=function(app){
-    var myjson=require('./controller');
-    
+module.exports = function(app) {
+    var myjson = require('./controller');
+
     //test api berjalan/tidak
     app.route('/')
         .get(myjson.index);
@@ -20,7 +20,7 @@ module.exports=function(app){
         .post(myjson.loginUser)
     app.route('/getAlluser')
         .get(myjson.getallUser)
-    
+
     //Khusus pet
     app.route('/postPet')
         .post(myjson.postPet)
