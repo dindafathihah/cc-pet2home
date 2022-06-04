@@ -75,6 +75,7 @@ exports.addUser = function(req, res) {
     var birth_place = req.body.birth_place
     var role = 'member'
     var status = 'active'
+    var avatar = 'default.png';
     var createdAt = new Date();
     var updatedAt = createdAt;
     conne.query('select email from user where email = ?', email, function(error, rows) {
@@ -130,6 +131,16 @@ exports.deleteUser = function(req, res) {
 
     conne.query('delete from user where id_user = ?', [id], function(error, rows) {
         if (!error) {
+            //delete avatar user
+            if (rows[0].avatar != 'default.png' || rows[0].avatar != null) {
+                fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('File has been Deleted');
+                    }
+                });
+            }
             res.status(200).json({
                 status: 200,
                 success: true,
@@ -156,27 +167,27 @@ exports.editProfile = function(req, res) {
     var birth_place = req.body.birth_place;
     var phone_number = req.body.phone_number;
     var updated_at = new Date()
-    var avatar = null
+    var avatar = 'default.png';
 
     //check image file
     if (req.file) {
-
-        // check file data in storage, if file exists delete it
-        conne.query('select * from user where id_user = ?', id, function(error, rows) {
-            if (rows.length == 1) {
-                if (rows[0].avatar != null) {
-                    fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('File has been Deleted');
-                        }
-                    });
-                }
-            }
-        });
         avatar = req.file.fieldname + '_' + req.file.originalname;
     }
+
+    // check file data in storage, if file exists delete it
+    conne.query('select * from user where id_user = ?', id, function(error, rows) {
+        if (rows.length == 1) {
+            if (rows[0].avatar != 'default.png' || rows[0].avatar != null) {
+                fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('File has been Deleted');
+                    }
+                });
+            }
+        }
+    });
 
     conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, id],
         function(error, rows, fields) {
@@ -190,7 +201,8 @@ exports.editProfile = function(req, res) {
                 res.status(200).json({
                     status: 200,
                     success: true,
-                    message: 'Success updates user with id = ' + id
+                    message: 'Success updates user with id = ' + id,
+                    destination: '/public/upload/user/' + avatar
                 })
             }
         }
