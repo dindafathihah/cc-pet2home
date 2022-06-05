@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // static-files
-app.use('/public/upload/user/', express.static('public/upload/user'));
+app.use('/public/upload/', express.static('public/upload/'));
 
 var route = require('./routes');
 route(app);

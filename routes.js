@@ -25,7 +25,7 @@ module.exports = function(app) {
 
     //Khusus pet
     app.route('/postPet')
-        .post(auth, myjson.postPet)
+        .post(auth, upload.imageUpload.single('image'), myjson.postPet)
     app.route('/profile/pet/:id')
         .get(auth, myjson.getPetwithIduser);
     app.route('/getallpet')
@@ -33,7 +33,7 @@ module.exports = function(app) {
     app.route('/getPetWith/:id')
         .get(auth, myjson.getPetwithIdpost)
     app.route('/post/update/:id')
-        .put(auth, myjson.editPost)
+        .put(auth, upload.imageUpload.single('image'), myjson.editPost)
     app.route('/post/delete/:id')
         .delete(auth, myjson.deletePost)
 

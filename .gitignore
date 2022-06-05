@@ -1,8 +1,7 @@
 node_modules
 .env
-public/upload/post/*
-public/upload/user/*
+public/upload/*
 
 
 # allow
-!public/upload/user/default.png
+!public/upload/default.png
