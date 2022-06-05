@@ -1,7 +1,7 @@
 'use strict'
 var conne = require('./connection')
 var md5 = require('md5')
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken')
 const { nanoid } = require('nanoid')
 
 exports.index = function(req, res) {
@@ -193,13 +193,13 @@ exports.postPet = function(req, res) {
     let values = ['posts-' + id, id_user, tittle, breed, age, location, description, insta, whatsapp, createdAt, updatedAt]
     conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, description,  insta, whatsapp, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
         if (error) {
-            res.status(500).send({
+            res.status(500).json({
                 status: 500,
                 success: false,
                 error
             })
         } else {
-            res.status(200).send({
+            res.status(200).json({
                 status: 200,
                 success: true,
                 message: 'Post sent successfully'
