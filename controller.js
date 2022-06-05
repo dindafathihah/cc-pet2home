@@ -2,6 +2,8 @@
 var conne = require('./connection')
 var md5 = require('md5')
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
+const path = require('path');
 const { nanoid } = require('nanoid')
 
 exports.index = function(req, res) {
@@ -73,6 +75,7 @@ exports.addUser = function(req, res) {
     var birth_place = req.body.birth_place
     var role = 'member'
     var status = 'active'
+    var avatar = 'default.png';
     var createdAt = new Date();
     var updatedAt = createdAt;
     conne.query('select email from user where email = ?', email, function(error, rows) {
@@ -128,6 +131,16 @@ exports.deleteUser = function(req, res) {
 
     conne.query('delete from user where id_user = ?', [id], function(error, rows) {
         if (!error) {
+            //delete avatar user
+            if (rows[0].avatar != 'default.png' || rows[0].avatar != null) {
+                fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('File has been Deleted');
+                    }
+                });
+            }
             res.status(200).json({
                 status: 200,
                 success: true,
@@ -146,66 +159,113 @@ exports.deleteUser = function(req, res) {
 
 //sukses
 exports.editProfile = function(req, res) {
-    let id = req.params.id
-    let username = req.body.username;
-    let password = md5(req.body.password);
-    let email = req.body.email;
-    let birth_date = req.body.birth_date;
-    let birth_place = req.body.birth_place;
-    let phone_number = req.body.phone_number;
-    let updated_at = new Date()
+    let id = req.params.id;
+    var username = req.body.username;
+    var password = md5(req.body.password);
+    var email = req.body.email;
+    var birth_date = req.body.birth_date;
+    var birth_place = req.body.birth_place;
+    var phone_number = req.body.phone_number;
+    var updated_at = new Date()
 
-    conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, updated_at=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, updated_at, id],
-        function(error, rows, fields) {
-            if (error) {
-                res.status(500).json({
-                    status: 500,
-                    success: false,
-                    error: error
-                })
-            } else if (!error) {
-                res.status(200).json({
-                    status: 200,
-                    success: true,
-                    message: 'Success updates user with id = ' + id
-                })
-            }
+    // check user data
+    conne.query('select * from user where id_user = ?', id, function(error, rows) {
+        if (rows.length == 1) {
+
+            //check image file
+            if (req.file) {
+                var avatar = req.file.fieldname + '_' + req.file.originalname;
+
+
+                if (rows[0].avatar != 'default.png' || rows[0].avatar != null) {
+
+                    //delete file
+                    fs.unlink(__dirname + '/public/upload/' + rows[0].avatar, function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('File has been Deleted');
+                        }
+                    });
+                }
+            } else {
+                var avatar = rows[0].avatar
+            };
+
+            conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, id],
+                function(error, rows, fields) {
+                    if (error) {
+                        res.status(500).json({
+                            status: 500,
+                            success: false,
+                            error: error
+                        })
+                    } else if (!error) {
+                        res.status(200).json({
+                            status: 200,
+                            success: true,
+                            message: 'Success updates user with id = ' + id,
+                            destination: '/public/upload/' + avatar
+                        })
+                    }
+                }
+            )
+        } else {
+            res.status(400).json({
+                status: 400,
+                success: false,
+                message: 'user data not found'
+            })
         }
-    )
+    })
 }
 
 
 //CRUD PET
 //sukses
 exports.postPet = function(req, res) {
-    var id = nanoid(16)
-    var id_user = req.body.id_user
-    var tittle = req.body.tittle
-    var breed = req.body.breed
-    var age = req.body.age
-    var location = req.body.location
-    var description = req.body.description
 
-    var whatsapp = req.body.whatsapp
-    var insta = req.body.insta
-    var createdAt = new Date()
-    var updatedAt = createdAt
-    let values = ['posts-' + id, id_user, tittle, breed, age, location, description, insta, whatsapp, createdAt, updatedAt]
-    conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, description,  insta, whatsapp, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
-        if (error) {
-            res.status(500).send({
-                status: 500,
-                success: false,
-                error
-            })
-        } else {
-            res.status(200).send({
-                status: 200,
-                success: true,
-                message: 'Post sent successfully'
-            })
-        }
-    })
+    //check image file
+    if (!req.file) {
+        res.status(400).send({
+            status: 400,
+            success: false,
+            message: "No File is selected."
+        })
+    } else {
+        var id = nanoid(16)
+        var id_user = req.body.id_user
+        var tittle = req.body.tittle
+        var breed = req.body.breed
+        var age = req.body.age
+        var location = req.body.location
+        var description = req.body.description
+        var lat = req.body.lat
+        var lon = req.body.lon
+        var whatsapp = req.body.whatsapp
+        var insta = req.body.insta
+        var createdAt = new Date()
+        var updatedAt = createdAt
+        var image = req.file.fieldname + '_' + req.file.originalname;
+
+
+        let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt, image]
+        conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at, pic) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
+            if (error) {
+                res.status(500).send({
+                    status: 500,
+                    success: false,
+                    message: error.message
+                })
+            } else {
+                res.status(200).send({
+                    status: 200,
+                    success: true,
+                    message: 'Post sent successfully'
+                })
+            }
+        })
+    }
 }
 
 //sukses
@@ -276,33 +336,65 @@ exports.deletePost = function(req, res) {
 
 //sukses
 exports.editPost = function(req, res) {
-    let id = req.params.id
+    var id_post = req.params.id;
     var tittle = req.body.tittle
-    var breed = req.body.breed
-    var age = req.body.age
-    var location = req.body.location
-    var description = req.body.description
-    var insta = req.body.insta
-    var updated_at = new Date()
-    let values = [tittle, breed, age, location, description, insta, updated_at, id]
+    var breed = req.body.breed;
+    var age = req.body.age;
+    var location = req.body.location;
+    var description = req.body.description;
+    var insta = req.body.insta;
+    var whatsapp = req.body.whatsapp;
+    var updated_at = new Date();
 
-    conne.query('update posts set tittle=?, breed=?, age=?, location=?, description=?, insta=?, updated_at=? where id_user=?', values, function(error, rows, fields) {
+    // check post data
+    conne.query('select * from posts where id_post = ?', id_post, function(error, rows) {
+        if (rows.length == 1) {
 
-        if (error) {
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: 'Fail updates id',
-                error
+            //check image file
+            if (req.file) {
+                var image = req.file.fieldname + '_' + req.file.originalname;
+
+                if (rows[0].pic != 'default.png' || rows[0].pic != null) {
+                    //delete file
+                    fs.unlink(__dirname + '/public/upload/' + rows[0].pic, function(err) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('File has been Deleted');
+                        }
+                    });
+                }
+            } else {
+                var image = rows[0].pic
+            };
+
+            // update data 
+            var values = [tittle, breed, age, location, description, insta, updated_at, image, whatsapp, id_post]
+            console.log(values);
+            conne.query('update posts set tittle = ?, breed = ?, age = ? , location = ? , description=?, insta=?, updated_at=?, pic=?, whatsapp=? where id_post=?', values, function(error, rows, fields) {
+
+                if (error) {
+                    res.status(500).json({
+                        status: 500,
+                        success: false,
+                        message: error.message
+                    })
+                } else if (!error) {
+                    res.status(200).json({
+                        status: 200,
+                        success: true,
+                        message: 'Post successfully updates, id = ' + id_post
+                    })
+                }
             })
-        } else if (!error) {
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: 'Success updates id = ' + id
+        } else {
+            res.status(400).json({
+                status: 400,
+                success: false,
+                message: 'post data not found'
             })
         }
-    })
+    });
 }
 
 exports.getpostbytittle = function(req, res) {

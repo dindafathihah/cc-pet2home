@@ -1,2 +1,7 @@
 node_modules
 .env
+public/upload/*
+
+
+# allow
+!public/upload/default.png

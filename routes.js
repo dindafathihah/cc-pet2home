@@ -3,6 +3,7 @@
 module.exports = function(app) {
     var myjson = require('./controller');
     var auth = require("./VerifyToken");
+    var upload = require('./multer-config');
 
     //test api berjalan/tidak
     app.route('/')
@@ -14,7 +15,7 @@ module.exports = function(app) {
     app.route('/profile/delete/:id')
         .delete(auth, myjson.deleteUser);
     app.route('/profile/update/:id')
-        .put(auth, myjson.editProfile)
+        .put(auth, upload.imageUpload.single('avatar'), myjson.editProfile)
     app.route('/register')
         .post(myjson.addUser)
     app.route('/login')
@@ -24,7 +25,7 @@ module.exports = function(app) {
 
     //Khusus pet
     app.route('/postPet')
-        .post(auth, myjson.postPet)
+        .post(auth, upload.imageUpload.single('image'), myjson.postPet)
     app.route('/profile/pet/:id')
         .get(auth, myjson.getPetwithIduser);
     app.route('/getallpet')
@@ -32,7 +33,7 @@ module.exports = function(app) {
     app.route('/getPetWith/:id')
         .get(auth, myjson.getPetwithIdpost)
     app.route('/post/update/:id')
-        .put(auth, myjson.editPost)
+        .put(auth, upload.imageUpload.single('image'), myjson.editPost)
     app.route('/post/delete/:id')
         .delete(auth, myjson.deletePost)
 
