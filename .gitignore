@@ -3,7 +3,7 @@ node_modules
 public/upload/*
 app.yaml
 deploy.yaml
-
+.env.example
 
 # allow
 !public/upload/default.png
