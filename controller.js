@@ -118,6 +118,7 @@ exports.getallUser = function(req, res) {
         res.status(200).json({
             status: 200,
             success: true,
+            message: 'Data has found',
             result: ({
                 data: rows
             })
@@ -151,7 +152,7 @@ exports.deleteUser = function(req, res) {
             res.status(404).json({
                 status: 404,
                 success: false,
-                message: 'Fail deletes id=' + id
+                message: 'Fail deletes id =' + id
             })
         }
     });
@@ -296,6 +297,7 @@ exports.getpet = function(req, res) {
         res.status(200).send({
             status: 200,
             succes: true,
+            message: 'Pet has found',
             result: ({
                 data: rows
             })
@@ -310,6 +312,7 @@ exports.getPetwithIduser = function(req, res) {
         res.status(200).send({
             status: 200,
             success: true,
+            message: 'Pet has found with id user = ' + id,
             result: ({
                 data: rows
             })
@@ -324,6 +327,7 @@ exports.getPetwithIdpost = function(req, res) {
         res.status(200).send({
             status: 200,
             succes: true,
+            message: 'Pet has found with id post = ' + id,
             result: ({
                 data: rows
             })
@@ -423,6 +427,7 @@ exports.getpostbytittle = function(req, res) {
         res.status(200).send({
             status: 200,
             succes: true,
+            message: 'Post has found with title = ' + title,
             result: ({
                 data: rows
             })
@@ -436,6 +441,7 @@ exports.getuserbyname = function(req, res) {
         res.status(200).json({
             status: 200,
             success: true,
+            message: 'User has found with username = ' + name,
             result: ({
                 data: rows
             })
@@ -452,6 +458,7 @@ exports.search = function(req, res) {
             res.status(200).json({
                 status: 200,
                 success: true,
+                message: 'Post has found with title = ' + title,
                 result: ({
                     data: rows
                 })
@@ -462,6 +469,7 @@ exports.search = function(req, res) {
             res.status(200).json({
                 status: 200,
                 success: true,
+                message: 'Post has found with breed = ' + breed,
                 result: ({
                     data: rows
                 })
@@ -472,6 +480,7 @@ exports.search = function(req, res) {
             res.status(200).json({
                 status: 200,
                 success: true,
+                message: 'Post has found with title = ' + title +' and breed = '+breed,
                 result: ({
                     data: rows
                 })
@@ -487,6 +496,7 @@ exports.searchUser = function(req, res) {
         res.status(200).json({
             status: 200,
             success: true,
+            message: 'User has found with username = ' + name,
             result: ({
                 data: rows
             })
