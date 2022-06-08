@@ -434,7 +434,7 @@ exports.search = function(req, res) {
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Post has found with title = ' + tittle,
+                message: 'Post has found with title = ' + title,
                 result: ({
                     data: rows
                 })
