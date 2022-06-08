@@ -58,7 +58,8 @@ exports.profileUserId = function(req, res) {
             message: 'User found',
             result: ({
                 data: rows
-            })
+            }),
+            userpic: '/public/upload/' + avatar
         })
     });
 };
@@ -86,8 +87,8 @@ exports.addUser = function(req, res) {
                 message: 'Email has been taken. Try with another email'
             })
         } else if (rows.length == 0) {
-            let values = ['user_' + id, email, username, password, phone_number, birth_date, birth_place, role, status, createdAt, updatedAt]
-            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place, role, status,created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
+            let values = ['user_' + id, email, username, password, phone_number, birth_date, birth_place, avatar, role, status, createdAt, updatedAt]
+            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place,avatar, role, status,created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
                 if (error) {
                     res.status(500).json({
                         status: 500,
@@ -168,6 +169,7 @@ exports.editProfile = function(req, res) {
     var birth_place = req.body.birth_place;
     var phone_number = req.body.phone_number;
     var updated_at = new Date()
+    var gender=req.body.gender
 
     // check user data
     conne.query('select * from user where id_user = ?', id, function(error, rows) {
@@ -193,7 +195,7 @@ exports.editProfile = function(req, res) {
                 var avatar = rows[0].avatar
             };
 
-            conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, id],
+            conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=?, gender=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, gender, id],
                 function(error, rows, fields) {
                     if (error) {
                         res.status(500).json({
@@ -270,8 +272,8 @@ exports.postPet = function(req, res) {
         var image = req.file.fieldname + '_' + req.file.originalname;
 
 
-        let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt, image]
-        conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at, pic) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
+        let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt,image]
+        conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at,image) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
             if (error) {
                 res.status(500).send({
                     status: 500,
@@ -421,33 +423,7 @@ exports.editPost = function(req, res) {
     });
 }
 
-exports.getpostbytittle = function(req, res) {
-    let title = req.params.title
-    conne.query(`select * from posts where tittle like '%${title}%'`, function(error, rows) {
-        res.status(200).send({
-            status: 200,
-            succes: true,
-            message: 'Post has found with title = ' + title,
-            result: ({
-                data: rows
-            })
-        })
-    });
-}
 
-exports.getuserbyname = function(req, res) {
-    let name = req.params.name
-    conne.query(`select * from user where username like '%${name}%'`, function(error, rows) {
-        res.status(200).json({
-            status: 200,
-            success: true,
-            message: 'User has found with username = ' + name,
-            result: ({
-                data: rows
-            })
-        })
-    });
-};
 
 exports.search = function(req, res) {
     let title = req.query.title
@@ -458,7 +434,7 @@ exports.search = function(req, res) {
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Post has found with title = ' + title,
+                message: 'Post has found with title = ' + tittle,
                 result: ({
                     data: rows
                 })
