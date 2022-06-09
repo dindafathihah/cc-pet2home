@@ -22,6 +22,8 @@ module.exports = function(app) {
         .post(myjson.loginUser)
     app.route('/getAlluser')
         .get(auth, myjson.getallUser)
+    app.route('/changePassword/:id')
+        .put(auth, myjson.changePassword)
 
     //Khusus pet
     app.route('/postPet')
@@ -38,8 +40,8 @@ module.exports = function(app) {
         .delete(auth, myjson.deletePost)
 
     //additional
-    
-    
+
+
     app.route('/search')
         .get(auth, myjson.search);
     app.route('/searchUser')
