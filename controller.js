@@ -238,7 +238,7 @@ exports.postPet = function(req, res) {
     } else {
         var id = nanoid(16)
         var id_user = req.body.id_user
-        var tittle = req.body.tittle
+        var title = req.body.title
         var breed = req.body.breed
         var age = req.body.age
         var location = req.body.location
@@ -252,8 +252,8 @@ exports.postPet = function(req, res) {
         var image = req.file.fieldname + '_' + req.file.originalname;
 
 
-        let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt, image]
-        conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at, pic) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
+        let values = ['posts-' + id, id_user, title, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt, image]
+        conne.query('insert into posts (id_post, id_user, title, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at, pic) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
             if (error) {
                 res.status(500).send({
                     status: 500,
@@ -343,7 +343,7 @@ exports.deletePost = function(req, res) {
 //sukses
 exports.editPost = function(req, res) {
     var id_post = req.params.id;
-    var tittle = req.body.tittle
+    var title = req.body.title
     var breed = req.body.breed;
     var age = req.body.age;
     var location = req.body.location;
@@ -375,9 +375,9 @@ exports.editPost = function(req, res) {
             };
 
             // update data 
-            var values = [tittle, breed, age, location, description, insta, updated_at, image, whatsapp, id_post]
+            var values = [title, breed, age, location, description, insta, updated_at, image, whatsapp, id_post]
             console.log(values);
-            conne.query('update posts set tittle = ?, breed = ?, age = ? , location = ? , description=?, insta=?, updated_at=?, pic=?, whatsapp=? where id_post=?', values, function(error, rows, fields) {
+            conne.query('update posts set title = ?, breed = ?, age = ? , location = ? , description=?, insta=?, updated_at=?, pic=?, whatsapp=? where id_post=?', values, function(error, rows, fields) {
 
                 if (error) {
                     res.status(500).json({
@@ -410,7 +410,7 @@ exports.search = function(req, res) {
     let breed = req.query.breed
 
     if (breed == null || breed == undefined) {
-        conne.query(`select * from posts where tittle like '%${title}%'`, function(error, rows) {
+        conne.query(`select * from posts where title like '%${title}%'`, function(error, rows) {
             res.status(200).json({
                 status: 200,
                 success: true,
@@ -432,7 +432,7 @@ exports.search = function(req, res) {
             })
         })
     } else if (title !== null && breed !== undefined) {
-        conne.query(`select * from posts where tittle like '%${title}%' and breed like '%${breed}%'`, function(error, rows) {
+        conne.query(`select * from posts where title like '%${title}%' and breed like '%${breed}%'`, function(error, rows) {
             res.status(200).json({
                 status: 200,
                 success: true,
