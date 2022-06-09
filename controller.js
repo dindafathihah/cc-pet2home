@@ -229,27 +229,7 @@ exports.editProfile = function(req, res) {
 //sukses
 exports.postPet = function(req, res) {
 
-    var whatsapp = req.body.whatsapp
-    var insta = req.body.insta
-    var createdAt = new Date()
-    var updatedAt = createdAt
-    let values = ['posts-' + id, id_user, tittle, breed, age, location, description, insta, whatsapp, createdAt, updatedAt]
-    conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, description,  insta, whatsapp, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
-            if (error) {
-                res.status(500).json({
-                    status: 500,
-                    success: false,
-                    error
-                })
-            } else {
-                res.status(200).json({
-                    status: 200,
-                    success: true,
-                    message: 'Post sent successfully'
-                })
-            }
-        })
-        //check image file
+    //check image file
     if (!req.file) {
         res.status(400).send({
             status: 400,
@@ -274,7 +254,7 @@ exports.postPet = function(req, res) {
 
 
         let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt, image]
-        conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at,image) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
+        conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at, pic) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
             if (error) {
                 res.status(500).send({
                     status: 500,
