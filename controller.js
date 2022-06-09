@@ -77,18 +77,19 @@ exports.addUser = function(req, res) {
     var role = 'member'
     var status = 'active'
     var avatar = 'default.png';
+    var gender = null;
     var createdAt = new Date();
     var updatedAt = createdAt;
     conne.query('select email from user where email = ?', email, function(error, rows) {
-        if (rows.length == 1) {
+        if (rows.length == null) {
             res.status(400).json({
                 status: 400,
                 success: false,
                 message: 'Email has been taken. Try with another email'
             })
         } else if (rows.length == 0) {
-            let values = ['user_' + id, email, username, password, phone_number, birth_date, birth_place, avatar, role, status, createdAt, updatedAt]
-            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place,avatar, role, status,created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
+            let values = ['user_' + id, email, username, password, phone_number, birth_date, birth_place, avatar, gender, role, status, createdAt, updatedAt]
+            conne.query('insert into user (id_user, email, username, password, phone_number, birth_date, birth_place,avatar, gender, role, status,created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
                 if (error) {
                     res.status(500).json({
                         status: 500,
@@ -169,7 +170,7 @@ exports.editProfile = function(req, res) {
     var birth_place = req.body.birth_place;
     var phone_number = req.body.phone_number;
     var updated_at = new Date()
-    var gender=req.body.gender
+    var gender = req.body.gender
 
     // check user data
     conne.query('select * from user where id_user = ?', id, function(error, rows) {
@@ -234,21 +235,21 @@ exports.postPet = function(req, res) {
     var updatedAt = createdAt
     let values = ['posts-' + id, id_user, tittle, breed, age, location, description, insta, whatsapp, createdAt, updatedAt]
     conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, description,  insta, whatsapp, created_at, updated_at) values (?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
-        if (error) {
-            res.status(500).json({
-                status: 500,
-                success: false,
-                error
-            })
-        } else {
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: 'Post sent successfully'
-            })
-        }
-    })
-    //check image file
+            if (error) {
+                res.status(500).json({
+                    status: 500,
+                    success: false,
+                    error
+                })
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    success: true,
+                    message: 'Post sent successfully'
+                })
+            }
+        })
+        //check image file
     if (!req.file) {
         res.status(400).send({
             status: 400,
@@ -272,7 +273,7 @@ exports.postPet = function(req, res) {
         var image = req.file.fieldname + '_' + req.file.originalname;
 
 
-        let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt,image]
+        let values = ['posts-' + id, id_user, tittle, breed, age, location, lat, lon, description, insta, whatsapp, createdAt, updatedAt, image]
         conne.query('insert into posts (id_post, id_user, tittle, breed, age,location, lat, lon, description,  insta, whatsapp, created_at, updated_at,image) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', values, function(error, rows, fields) {
             if (error) {
                 res.status(500).send({
@@ -456,7 +457,7 @@ exports.search = function(req, res) {
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: 'Post has found with title = ' + title +' and breed = '+breed,
+                message: 'Post has found with title = ' + title + ' and breed = ' + breed,
                 result: ({
                     data: rows
                 })
@@ -478,4 +479,65 @@ exports.searchUser = function(req, res) {
             })
         })
     })
+}
+
+exports.changePassword = function(req, res) {
+    let id = req.params.id;
+    var oldPassword = req.body.oldPassword;
+    var newPassword = req.body.newPassword;
+
+    conne.query('select * from user where id_user = ?', [id], function(error, rows) {
+
+        if (rows.length != null) {
+            if (rows[0].password == md5(oldPassword)) {
+
+                //update password
+                let id = rows[0].id_user;
+                var username = rows[0].username;
+                var password = md5(newPassword);
+                var email = rows[0].email;
+                var birth_date = rows[0].birth_date;
+                var birth_place = rows[0].birth_place;
+                var phone_number = rows[0].phone_number;
+                var avatar = rows[0].avatar;
+                var updated_at = new Date()
+                var gender = rows[0].gender
+
+                conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=?, gender=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, gender, id],
+                    function(error, rows, fields) {
+                        if (error) {
+                            res.status(500).json({
+                                status: 500,
+                                success: false,
+                                error: error
+                            })
+                        } else if (!error) {
+                            res.status(200).json({
+                                status: 200,
+                                success: true,
+                                message: 'Updated password user successfully',
+                            })
+                        }
+                    }
+                )
+
+
+            } else {
+                res.status(200).json({
+                    status: 200,
+                    success: false,
+                    message: 'Old Password not match '
+                })
+            }
+        } else {
+            res.status(200).json({
+                status: 200,
+                success: false,
+                message: 'User not found'
+            })
+        }
+
+    })
+
+
 }
