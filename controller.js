@@ -59,7 +59,7 @@ exports.profileUserId = function(req, res) {
             result: ({
                 data: rows
             }),
-            userpic: '/public/upload/' + avatar
+            userpic: '/public/upload/' + rows[0].avatar
         })
     });
 };
@@ -164,7 +164,6 @@ exports.deleteUser = function(req, res) {
 exports.editProfile = function(req, res) {
     let id = req.params.id;
     var username = req.body.username;
-    var password = md5(req.body.password);
     var email = req.body.email;
     var birth_date = req.body.birth_date;
     var birth_place = req.body.birth_place;
@@ -196,7 +195,7 @@ exports.editProfile = function(req, res) {
                 var avatar = rows[0].avatar
             };
 
-            conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=?, gender=? where id_user = ?', [username, password, email, birth_date, birth_place, phone_number, avatar, updated_at, gender, id],
+            conne.query('update user set username = ?, password=?,email = ?, birth_date = ?, birth_place = ?,  phone_number=?, avatar = ?, updated_at=?, gender=? where id_user = ?', [username, rows[0].password, email, birth_date, birth_place, phone_number, avatar, updated_at, gender, id],
                 function(error, rows, fields) {
                     if (error) {
                         res.status(500).json({
