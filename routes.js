@@ -38,10 +38,8 @@ module.exports = function(app) {
         .delete(auth, myjson.deletePost)
 
     //additional
-    app.route('/search/title/:title')
-        .get(auth, myjson.getpostbytittle);
-    app.route('/search/name/:name')
-        .get(auth, myjson.getuserbyname);
+    
+    
     app.route('/search')
         .get(auth, myjson.search);
     app.route('/searchUser')
