@@ -132,19 +132,20 @@ exports.getallUser = function(req, res) {
 //sukses
 exports.deleteUser = function(req, res) {
     let id = req.params.id
+    
 
     conne.query('delete from user where id_user = ?', [id], function(error, rows) {
         if (!error) {
             //delete avatar user
-            if (rows[0].avatar != 'default.png' || rows[0].avatar != null) {
-                fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log('File has been Deleted');
-                    }
-                });
-            }
+            // if (rows[0].avatar != 'default.png' || rows[0].avatar != null) {
+            //     fs.unlink(__dirname + '/public/upload/user/' + rows[0].avatar, function(err) {
+            //         if (err) {
+            //             console.log(err);
+            //         } else {
+            //             console.log('File has been Deleted');
+            //         }
+            //     });
+            // }
             res.status(200).json({
                 status: 200,
                 success: true,
