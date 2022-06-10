@@ -351,6 +351,8 @@ exports.editPost = function(req, res) {
     var location = req.body.location;
     var description = req.body.description;
     var insta = req.body.insta;
+    var lat = req.body.lat;
+    var lon = req.body.lon;
     var whatsapp = req.body.whatsapp;
     var updated_at = new Date();
 
@@ -377,9 +379,9 @@ exports.editPost = function(req, res) {
             };
 
             // update data 
-            var values = [title, breed, age, location, description, insta, updated_at, image, whatsapp, id_post]
+            var values = [title, breed, age, location, description, insta, updated_at, image, whatsapp, lat, lon, id_post]
             console.log(values);
-            conne.query('update posts set title = ?, breed = ?, age = ? , location = ? , description=?, insta=?, updated_at=?, pic=?, whatsapp=? where id_post=?', values, function(error, rows, fields) {
+            conne.query('update posts set title = ?, breed = ?, age = ? , location = ? , description=?, insta=?, updated_at=?, pic=?, whatsapp=?, lat=?, lon=? where id_post=?', values, function(error, rows, fields) {
 
                 if (error) {
                     res.status(500).json({
