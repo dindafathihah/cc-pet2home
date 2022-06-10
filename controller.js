@@ -52,6 +52,7 @@ exports.profileUserId = function(req, res) {
     let id = req.params.id
 
     conne.query('select * from user where id_user = ?', [id], function(error, rows) {
+        var avatar = rows[0].avatar
         res.status(200).json({
             status: 200,
             success: true,
@@ -59,7 +60,7 @@ exports.profileUserId = function(req, res) {
             result: ({
                 data: rows
             }),
-            userpic: '/public/upload/' + rows[0].avatar
+            userpic: '/public/upload/' + avatar
         })
     });
 };
