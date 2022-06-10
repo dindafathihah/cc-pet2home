@@ -275,7 +275,7 @@ exports.postPet = function(req, res) {
 //sukses
 exports.getpet = function(req, res) {
 
-    conne.query('select * from posts', function(error, rows) {
+    conne.query("SELECT * FROM posts, user WHERE posts.id_user = user.id_user", function(error, rows) {
 
         res.status(200).send({
             status: 200,

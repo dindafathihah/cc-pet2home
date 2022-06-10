@@ -12,9 +12,13 @@ app.use('/public/upload/', express.static('public/upload/'));
 var route = require('./routes');
 route(app);
 
-const port = process.env.PORT
-const host = process.env.DB_HOST
+// Start the server
+const port = process.env.PORT || 3000;
+const host = process.env.DB_HOST ;
 
 app.listen(port, () => {
     console.log(`Server started on ${port} and running at ${host}`);
+    
 });
+
+
