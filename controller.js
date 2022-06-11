@@ -52,16 +52,25 @@ exports.profileUserId = function(req, res) {
     let id = req.params.id
 
     conne.query('select * from user where id_user = ?', [id], function(error, rows) {
-        var avatar = rows[0].avatar
-        res.status(200).json({
-            status: 200,
-            success: true,
-            message: 'User found',
-            result: ({
-                data: rows
-            }),
-            userpic: '/public/upload/' + avatar
-        })
+
+        if (rows.length < 1) {
+            res.status(400).json({
+                status: 400,
+                success: false,
+                message: 'User not found'
+            })
+        } else {
+            var avatar = rows[0].avatar
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'User found',
+                result: ({
+                    data: rows
+                }),
+                userpic: '/public/upload/' + avatar
+            })
+        }
     });
 };
 
@@ -132,7 +141,7 @@ exports.getallUser = function(req, res) {
 //sukses
 exports.deleteUser = function(req, res) {
     let id = req.params.id
-    
+
 
     conne.query('delete from user where id_user = ?', [id], function(error, rows) {
         if (!error) {
