@@ -421,6 +421,7 @@ exports.editPost = function(req, res) {
 exports.search = function(req, res) {
     let title = req.query.title
     let breed = req.query.breed
+    let full = req.query.q
 
     if (breed == null || breed == undefined) {
         conne.query(`select * from posts where title like '%${title}%'`, function(error, rows) {
@@ -454,6 +455,24 @@ exports.search = function(req, res) {
                     data: rows
                 })
             })
+        })
+    } else if (full === null) {
+        conne.query(`SELECT *,user.avatar,user.username,user.role,user.status FROM posts JOIN user ON posts.id_user = user.id_user WHERE 
+            posts.title like '%${full}%' or posts.breed like '%${full}' or posts.location like '%${full}'`, function(error, rows) {
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Post has found with search = ' + full,
+                result: ({
+                    data: rows
+                })
+            })
+        })
+    } else {
+        res.status(400).json({
+            status: 400,
+            success: false,
+            message: 'Failed to search for posts'
         })
     }
 }
