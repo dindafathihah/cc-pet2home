@@ -44,8 +44,8 @@ DB_USER=<CONFIG_DB_USER>
 DB_PASS=<CONFIG_DB_PASSWORD>
 DB_NAME=<CONFIG_DB_NAME>
 PORT=<CONFIG_PORT>
-TOKEN_KEY=<CONFIG_TOKEN_KEY>```
-
+TOKEN_KEY=<CONFIG_TOKEN_KEY>
+```
 
 > 4. Configure Node_Modules
 install the dependencies in node_modules folder
