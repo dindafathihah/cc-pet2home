@@ -25,21 +25,20 @@ Project is created with:
 ![Backend Arch drawio](https://user-images.githubusercontent.com/22671679/173237870-d6c0778d-9820-4d5d-b003-e6da30d714c7.png)
 
 
-# Steps 
+## Steps Deploy To GCP 
 > Create Google Cloud SQL (MySQL)
-  - Create and Setup your Cloud Sql Instance
-  - Choose MySQL as your Database Engine
-  - Choose MySQL version 8.0 
-  - Import pet2home.sql to Cloud Sql
+  1. Create and Setup your Cloud Sql Instance
+  2. Choose MySQL as your Database Engine
+  3. Choose MySQL version 8.0 
+  4. Import pet2home.sql to Cloud Sql
 
-# Deploy To GCP 
+# Deploy to Google Compute Engine
 1. Create Compute Engine instance and connect to instances via ssh
 2. Clone this repo ```git clone https://github.com/dindafathihah/cc-pet2home.git```
-
-> Configure Database
-```
+> 3. Configure Database
 - Rename .env.example to .env
 - Adjust configuration with your database config "our apps is using MySQL" : 
+```
 DB_HOST=<CONFIG_DB_LOCALHOST>
 DB_USER=<CONFIG_DB_USER>
 DB_PASS=<CONFIG_DB_PASSWORD>
@@ -48,11 +47,10 @@ PORT=<CONFIG_PORT>
 TOKEN_KEY=<CONFIG_TOKEN_KEY>
 ```
 
-> Configure Node_Modules
-# Install the dependencies in node_modules folder
+> 4. Configure Node_Modules
+install the dependencies in node_modules folder
 ```npm install```
-# Run Node Server 
+> 5. Run Node Server 
 ```npm run start
 ```
-# How to run this Flask app
 
