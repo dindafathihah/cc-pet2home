@@ -35,22 +35,23 @@ Project is created with:
 # Deploy to Google Compute Engine
 1. Create Compute Engine instance and connect to instances via ssh
 2. Clone this repo ```git clone https://github.com/dindafathihah/cc-pet2home.git```
-> 3. Configure Database
+3. Configure Database
 - Rename .env.example to .env
 - Adjust configuration with your database config "our apps is using MySQL" : 
-```
-DB_HOST=<CONFIG_DB_LOCALHOST>
+
+```DB_HOST=<CONFIG_DB_LOCALHOST>
 DB_USER=<CONFIG_DB_USER>
 DB_PASS=<CONFIG_DB_PASSWORD>
 DB_NAME=<CONFIG_DB_NAME>
 PORT=<CONFIG_PORT>
-TOKEN_KEY=<CONFIG_TOKEN_KEY>
-```
+TOKEN_KEY=<CONFIG_TOKEN_KEY>```
+
 
 > 4. Configure Node_Modules
 install the dependencies in node_modules folder
+
 ```npm install```
 > 5. Run Node Server 
-```npm run start
-```
+```npm run start```
+
 
