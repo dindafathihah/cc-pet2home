@@ -50,9 +50,9 @@ TOKEN_KEY=<CONFIG_TOKEN_KEY>
 > 4. Configure Node_Modules
 install the dependencies in node_modules folder
 
-  ```npm install```
+ * ```npm install```
 > 5. Run Node Server 
 
-  ```npm run start```
+ * ```npm run start```
 
 
