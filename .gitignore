@@ -4,6 +4,7 @@ public/upload/*
 app.yaml
 deploy.yaml
 .env.example
+note.txt
 
 # allow
 !public/upload/default.png
