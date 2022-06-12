@@ -26,7 +26,7 @@ Project is created with:
 
 
 ## Steps Deploy To GCP 
-> Create Google Cloud SQL (MySQL)
+> Create Google Cloud SQL instances (MySQL)
   1. Create and Setup your Cloud Sql Instance
   2. Choose MySQL as your Database Engine
   3. Choose MySQL version 8.0 
