@@ -22,6 +22,7 @@ Project is created with:
 * Google Cloud SQL: MySQL 8.0
 
 # Cloud Computing Architecture for this app
+![Backend Arch drawio](https://user-images.githubusercontent.com/22671679/173237870-d6c0778d-9820-4d5d-b003-e6da30d714c7.png)
 
 
 # Steps 
